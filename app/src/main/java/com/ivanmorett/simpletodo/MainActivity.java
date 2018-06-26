@@ -2,6 +2,7 @@ package com.ivanmorett.simpletodo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,10 +47,20 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
-        writeItems();
-        etNewItem.setText("");
-        Toast.makeText(getBaseContext(), "Item added to list", Toast.LENGTH_SHORT).show();
+        if(validateInput(itemText)) {
+            itemsAdapter.add(itemText);
+            writeItems();
+            etNewItem.setText("");
+            Toast.makeText(getBaseContext(), "Item added to list", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean validateInput(String text){
+        if(text.isEmpty()){
+            new AlertDialog.Builder(this).setTitle("Sorry!").setMessage("Sorry, we can't save an empty message").show();
+            return false;
+        }
+        return true;
     }
 
     private void setupListViewListener() {

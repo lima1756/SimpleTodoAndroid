@@ -20,6 +20,7 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
+* [x] Input validation
 * [ ] Soon!
 
 ## Video Walkthrough
