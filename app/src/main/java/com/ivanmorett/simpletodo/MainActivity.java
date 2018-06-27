@@ -1,8 +1,8 @@
 package com.ivanmorett.simpletodo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        if(validateInput(itemText)) {
+        if(Validation.validateInput(this, itemText)) {
             itemsAdapter.add(itemText);
             writeItems();
             etNewItem.setText("");
@@ -55,13 +55,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateInput(String text){
-        if(text.isEmpty()){
-            new AlertDialog.Builder(this).setTitle("Sorry!").setMessage("Sorry, we can't save an empty message").show();
-            return false;
-        }
-        return true;
-    }
+
 
     private void setupListViewListener() {
         // set the ListView's itemLongClickListener
@@ -76,6 +70,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent editItemActivity = new Intent(MainActivity.this, EditItemActivity.class);
+                String item = items.get(i);
+
+                editItemActivity.putExtra("item", item);
+                editItemActivity.putExtra("id", i);
+                startActivityForResult(editItemActivity, 1);
+
+
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            String item = data.getExtras().getString("item");
+            int id = data.getExtras().getInt("id");
+            items.remove(id);
+            items.add(id, item);
+            itemsAdapter.notifyDataSetChanged();
+            writeItems();
+        }
+
     }
 
     // returns the file in which the data is stored
