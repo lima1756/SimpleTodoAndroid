@@ -4,7 +4,7 @@ SimpleTodo is an android app that allows building a todo list and basic todo ite
 
 Submitted by: Luis Ivan Morett Arevalo
 
-Time spent: 3 hours spent in total
+Time spent: 5 hours spent in total
 
 ## User Stories
 
@@ -21,17 +21,19 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Input validation
-* [ ] Database implementation (Soon)!
+* [ ] Database implementation (I didn't have enough time :c )!
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-* Soon!
+<img src='https://i.imgur.com/ktidDjQ.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+The principal challenge I encountered was the "Fatal signal 6" error, which I couldn't find why it happened. I think it occurred after manipulating intents, but if I launched a new emulator instance the app worked as intended, and I couldn't solve the error in the original emulator.
+
+Another challenge I encountered were bugs in the same Android Studio that forced me to restart the program so I could use it normally.
 
 ## License
 
