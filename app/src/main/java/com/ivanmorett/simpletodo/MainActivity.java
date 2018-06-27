@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             items.add(id, item);
             itemsAdapter.notifyDataSetChanged();
             writeItems();
+            Toast.makeText(this, "Item updated", Toast.LENGTH_SHORT).show();
         }
 
     }
