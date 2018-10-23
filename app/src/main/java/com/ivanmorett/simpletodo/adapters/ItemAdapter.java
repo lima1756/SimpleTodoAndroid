@@ -76,9 +76,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.tvDueDate) TextView tvDueDate;
-        @BindView(R.id.tvItem) TextView tvItem;
-        @BindView(R.id.rlItem) RelativeLayout rlItem;
+        @BindView(R.id.tvDueDate) public TextView tvDueDate;
+        @BindView(R.id.tvItem) public TextView tvItem;
+        @BindView(R.id.rlItem) public RelativeLayout rlItem;
+        @BindView(R.id.rlBackground) public RelativeLayout rlBackground;
 
         public ViewHolder(View itemView) {
             super(itemView);

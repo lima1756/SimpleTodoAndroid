@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.ivanmorett.simpletodo.adapters.ItemAdapter;
 import com.ivanmorett.simpletodo.database.AppDatabase;
@@ -14,6 +15,7 @@ import com.ivanmorett.simpletodo.fragments.EditItemFragment;
 import com.ivanmorett.simpletodo.interfaces.OnCloseDialog;
 import com.ivanmorett.simpletodo.database.Item;
 import com.ivanmorett.simpletodo.R;
+import com.ivanmorett.simpletodo.utils.RecyclerItemTouchHelper;
 
 import org.apache.commons.io.FileUtils;
 
@@ -27,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements OnCloseDialog{
+public class MainActivity extends AppCompatActivity implements OnCloseDialog, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
 
     ArrayList<Item> items;
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements OnCloseDialog{
 
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         rvItems.setAdapter(itemAdapter);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvItems);
 
 
     }
@@ -89,5 +94,20 @@ public class MainActivity extends AppCompatActivity implements OnCloseDialog{
                 AppDatabase.getDatabase(MainActivity.this).itemDao().insert(item);
             }
         }).start();
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof ItemAdapter.ViewHolder) {
+            final Item delete = items.get(viewHolder.getAdapterPosition());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    AppDatabase.getDatabase(MainActivity.this).itemDao().delete(delete);
+                }
+            }).start();
+            items.remove(viewHolder.getAdapterPosition());
+            itemAdapter.notifyDataSetChanged();
+        }
     }
 }
