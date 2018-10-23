@@ -1,31 +1,27 @@
-package com.ivanmorett.simpletodo;
+package com.ivanmorett.simpletodo.fragments;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.ivanmorett.simpletodo.R;
+import com.ivanmorett.simpletodo.constants.DateConstants;
+import com.ivanmorett.simpletodo.interfaces.OnCloseDialog;
+import com.ivanmorett.simpletodo.models.Item;
+
 import java.util.Calendar;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
+import butterknife.OnClick;
 
 public class EditItemFragment extends DialogFragment {
 
@@ -33,17 +29,18 @@ public class EditItemFragment extends DialogFragment {
     @BindView(R.id.etItem) EditText etItem;
     @BindView(R.id.etDueDate) EditText etDueDate;
     @BindView(R.id.btnSave) Button btnSave;
-    private final static String DATEFORMAT="MM/dd/yy";
     private Item item;
     private DatePickerDialog.OnDateSetListener date;
     private Calendar calendar;
+    private OnCloseDialog onCloseDialog;
 
     public EditItemFragment(){}
 
-    public static EditItemFragment newInstance(Item item){
+    public static EditItemFragment newInstance(Item item, OnCloseDialog onCloseDialog){
         EditItemFragment fragment = new EditItemFragment();
         Bundle args = new Bundle();
         fragment.item = item;
+        fragment.onCloseDialog = onCloseDialog;
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +49,11 @@ public class EditItemFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.calendar = Calendar.getInstance();
-        this.date = new DatePickerDialog.OnDateSetListener() {
 
+        etItem.setText(item.getText());
+        etDueDate.setText(DateConstants.SIMPLE_DATE_FORMAT.format(item.getDueDate()));
+
+        this.date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
@@ -62,31 +62,7 @@ public class EditItemFragment extends DialogFragment {
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateLabel();
             }
-
         };
-
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    item.setText(etItem.getText().toString());
-                    item.setDueDate(new SimpleDateFormat(DATEFORMAT).parse(etDueDate.getText().toString()));
-                }
-                catch(ParseException ex){
-                    Log.e("ERROR", "onClick: ",ex );
-                }
-            }
-        });
-
-        etDueDate.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                new DatePickerDialog(getActivity(), date, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
     }
 
     @Override
@@ -97,7 +73,27 @@ public class EditItemFragment extends DialogFragment {
     }
 
     private void updateLabel() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.US);
-        etDueDate.setText(sdf.format(calendar.getTime()));
+        etDueDate.setText(DateConstants.SIMPLE_DATE_FORMAT.format(calendar.getTime()));
     }
+
+    @OnClick(R.id.btnSave)
+    public void save(){
+        item.setText(etItem.getText().toString());
+        item.setDueDate(calendar.getTime());
+        if(item.verify()) {
+            onCloseDialog.beforeClose(item);
+            this.dismiss();
+        }
+        else
+            Toast.makeText(getContext(), "Please verify the todo item is not blank", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @OnClick(R.id.etDueDate)
+    public void displayCalendar(){
+        new DatePickerDialog(getActivity(), date, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
 }
