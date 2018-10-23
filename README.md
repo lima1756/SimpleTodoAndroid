@@ -21,7 +21,11 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Input validation
-* [ ] Database implementation (I didn't have enough time :c )!
+* [x] Database implementation
+* [x] Some material design
+* [x] Swipe to remove
+* [x] Task priority based in due date (the todo item changed color to represent it)
+* [x] The user can set a task as done or to set it again as undone
 
 ## Video Walkthrough
 
