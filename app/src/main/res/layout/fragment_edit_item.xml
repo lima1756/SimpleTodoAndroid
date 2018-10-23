@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ivanmorett.simpletodo.EditItemFragment">
+
+
+    <TextView
+        android:id="@+id/tvTodoItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Your item:" />
+
+    <EditText
+        android:id="@+id/etItem"
+        android:layout_width="306dp"
+        android:layout_height="41dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
+        android:layout_below="@id/tvTodoItem"
+        android:inputType="textPersonName" />
+
+
+    <TextView
+        android:id="@+id/tvDueDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etItem"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Due date:" />
+
+    <EditText
+        android:id="@+id/etDueDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvDueDate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etDueDate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:onClick="onSaveItem"
+        android:text="Save" />
+</RelativeLayout>

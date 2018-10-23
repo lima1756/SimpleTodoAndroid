@@ -2,6 +2,7 @@ package com.ivanmorett.simpletodo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -73,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent editItemActivity = new Intent(MainActivity.this, EditItemActivity.class);
-                String item = items.get(i);
+                FragmentManager fm = getSupportFragmentManager();
 
-                editItemActivity.putExtra("item", item);
-                editItemActivity.putExtra("id", i);
-                startActivityForResult(editItemActivity, 1);
+                EditItemFragment editNameDialogFragment = EditItemFragment.newInstance(new Item());
+
+                editNameDialogFragment.show(fm, "fragment_edit_name");
+
 
 
 
