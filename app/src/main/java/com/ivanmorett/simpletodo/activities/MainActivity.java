@@ -54,18 +54,24 @@ public class MainActivity extends AppCompatActivity implements OnCloseDialog, Re
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         rvItems.setAdapter(itemAdapter);
 
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvItems);
 
 
     }
 
-    // read the items from the file system
+    // read the items from the database
     private void readItems() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 items.addAll(AppDatabase.getDatabase(MainActivity.this).itemDao().getAll());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        itemAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         }).start();
     }

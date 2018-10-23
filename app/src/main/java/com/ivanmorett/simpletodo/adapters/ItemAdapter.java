@@ -1,6 +1,8 @@
 package com.ivanmorett.simpletodo.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +24,7 @@ import com.ivanmorett.simpletodo.fragments.EditItemFragment;
 import com.ivanmorett.simpletodo.interfaces.OnCloseDialog;
 import com.ivanmorett.simpletodo.database.Item;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -64,8 +68,31 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.tvDueDate.setText(dueDateText);
         holder.tvItem.setText(todoItem);
 
-        Log.d("SETTING DATA", "onBindViewHolder: "+dueDate.getTime());
+        holder.cbStatus.setChecked(item.getState());
 
+        if(item.getState()){
+            holder.tvItem.setPaintFlags(holder.tvItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        else{
+            holder.tvItem.setPaintFlags(holder.tvItem.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dueDate);
+        cal.add(Calendar.DATE, -2);
+        Date dueDateMinus2 = cal.getTime();
+        cal.add(Calendar.DATE, -3);
+        Date dueDateMinus5 = cal.getTime();
+
+        if(date.compareTo(dueDateMinus2)>0){
+            holder.rlItem.setBackgroundColor(Color.RED);
+        } else if(date.compareTo(dueDateMinus5)>0){
+            holder.rlItem.setBackgroundColor(Color.YELLOW);
+        }
+        else{
+            holder.rlItem.setBackgroundColor(Color.WHITE);
+        }
 
     }
 
@@ -78,6 +105,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         @BindView(R.id.tvDueDate) public TextView tvDueDate;
         @BindView(R.id.tvItem) public TextView tvItem;
+        @BindView(R.id.cbStatus) public CheckBox cbStatus;
         @BindView(R.id.rlItem) public RelativeLayout rlItem;
         @BindView(R.id.rlBackground) public RelativeLayout rlBackground;
 
@@ -105,6 +133,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             });
 
             editNameDialogFragment.show(fm, "fragment");
+        }
+
+        @OnClick(R.id.cbStatus)
+        public void changeState(){
+            Item item = mItems.get(getAdapterPosition());
+            item.changeState();
+            notifyItemChanged(getAdapterPosition());
         }
 
     }
