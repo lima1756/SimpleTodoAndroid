@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.ivanmorett.simpletodo.R;
 import com.ivanmorett.simpletodo.constants.DateConstants;
 import com.ivanmorett.simpletodo.interfaces.OnCloseDialog;
-import com.ivanmorett.simpletodo.models.Item;
+import com.ivanmorett.simpletodo.database.Item;
 
 import java.util.Calendar;
 

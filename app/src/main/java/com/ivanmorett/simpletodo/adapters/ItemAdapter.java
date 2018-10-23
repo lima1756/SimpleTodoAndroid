@@ -14,10 +14,12 @@ import android.support.v7.widget.RecyclerView;
 
 
 import com.ivanmorett.simpletodo.R;
+import com.ivanmorett.simpletodo.activities.MainActivity;
 import com.ivanmorett.simpletodo.constants.DateConstants;
+import com.ivanmorett.simpletodo.database.AppDatabase;
 import com.ivanmorett.simpletodo.fragments.EditItemFragment;
 import com.ivanmorett.simpletodo.interfaces.OnCloseDialog;
-import com.ivanmorett.simpletodo.models.Item;
+import com.ivanmorett.simpletodo.database.Item;
 
 import java.util.Date;
 import java.util.List;
@@ -91,6 +93,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 @Override
                 public void beforeClose(Item item) {
                     notifyItemChanged(getAdapterPosition());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Item item = mItems.get(getAdapterPosition());
+                            AppDatabase.getDatabase(context).itemDao().update(item);
+                        }
+                    }).start();
                 }
             });
 
